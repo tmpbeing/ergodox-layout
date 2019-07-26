@@ -4,7 +4,7 @@ This is my configuration layout for the Ergodox EZ shine using the [qmk firmware
 
 It is tailored to be used with vim/emacs, a tiling wm (i3) and tmux.
 
-![Layout][keyboard-layout.jpg]
+![Layout](base-layout.jpg)
 
 ## Layout
 
