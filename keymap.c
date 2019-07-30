@@ -279,7 +279,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 
-static void _td_brackets_finished(qk_tap_dance_state_t *state, void *user_data) {
+void _td_brackets_finished(qk_tap_dance_state_t *state, void *user_data) {
     if (state->count == 1) {
         if (state->keycode == TD(CT_LBP))
             register_code16(KC_LBRC);
@@ -293,7 +293,7 @@ static void _td_brackets_finished(qk_tap_dance_state_t *state, void *user_data) 
     }
 }
 
-static void _td_brackets_reset(qk_tap_dance_state_t *state, void *user_data) {
+void _td_brackets_reset(qk_tap_dance_state_t *state, void *user_data) {
     if (state->count == 1) {
         if (state->keycode == TD(CT_LBP))
             unregister_code16(KC_LBRC);
@@ -307,7 +307,7 @@ static void _td_brackets_reset(qk_tap_dance_state_t *state, void *user_data) {
     }
 }
 
-static void _td_window_controls(qk_tap_dance_state_t *state, void *user_data) {
+void _td_window_controls_finished(qk_tap_dance_state_t *state, void *user_data) {
     if (state->count == 1) {
         set_oneshot_layer(WM, ONESHOT_START);
         set_oneshot_mods(WM_MOD);
@@ -317,8 +317,62 @@ static void _td_window_controls(qk_tap_dance_state_t *state, void *user_data) {
     }
 }
 
+void _td_window_controls_reset(qk_tap_dance_state_t *state, void *user_data) {
+    clear_oneshot_layer_state(ONESHOT_PRESSED);
+}
+
 qk_tap_dance_action_t tap_dance_actions[] = {
     [CT_LBP] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, _td_brackets_finished, _td_brackets_reset),
     [CT_RBP] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, _td_brackets_finished, _td_brackets_reset),
-    [CT_WM_TMUX] = ACTION_TAP_DANCE_FN(_td_window_controls)
+    [CT_WM_TMUX] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, _td_window_controls_finished, _td_window_controls_reset)
 };
+
+uint32_t layer_state_set_user(uint32_t state) {
+    switch (biton32(state)) {
+        case BASE:
+            rgblight_setrgb(RGBLIGHT_COLOR_LAYER_0);
+            break;
+        case WM:
+            rgblight_setrgb(RGBLIGHT_COLOR_LAYER_1);
+            break;
+        case TMUX:
+            rgblight_setrgb(RGBLIGHT_COLOR_LAYER_2);
+            break;
+        case FN:
+            rgblight_setrgb(RGBLIGHT_COLOR_LAYER_3);
+            break;
+        case FR:
+            rgblight_setrgb(RGBLIGHT_COLOR_LAYER_4);
+            break;
+        case NUM:
+            rgblight_setrgb(RGBLIGHT_COLOR_LAYER_5);
+            break;
+        default:
+            rgblight_setrgb(RGBLIGHT_COLOR_LAYER_0);
+            break;
+    }
+    return state;
+}
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case KC_TRNS:
+        case KC_NO:
+            if (record->event.pressed && is_oneshot_layer_active()) {
+                clear_oneshot_layer_state(ONESHOT_OTHER_KEY_PRESSED);
+            }
+            return true;
+            break;
+        default:
+            return true;
+    }
+    return true;
+}
+
+void suspend_power_down_user(void) {
+    rgblight_disable();
+}
+
+void suspend_wakeup_init_user(void) {
+    rgblight_enable();
+}
