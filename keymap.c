@@ -385,11 +385,25 @@ void suspend_wakeup_init_user(void) {
 }
 
 void do_accentuated_character(char *accent, char *character, keyrecord_t *record) {
+    bool is_shifted = false;
+    uint8_t temp_mod = get_mods();
+    uint8_t temp_osm = get_oneshot_mods();
+    clear_mods(); clear_oneshot_mods();
+    if ( (temp_mod | temp_osm) & MOD_MASK_SHIFT ) {
+        is_shifted = true;
+    }
     if (record->event.pressed) {
+        clear_mods();
         SEND_STRING(SS_DOWN(X_RALT));
         send_string(accent);
         SEND_STRING(SS_UP(X_RALT));
+        if (is_shifted) {
+            SEND_STRING(SS_DOWN(X_LSHIFT));
+        }
         send_string(character);
+        if (is_shifted) {
+            SEND_STRING(SS_UP(X_LSHIFT));
+        }
         reset_oneshot_layer();
         layer_off(FR);
     }
