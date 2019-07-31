@@ -18,7 +18,8 @@ the TMUX layer and input the tmux prefix.
 The `[{(` and `)}]` keys input square brackets when single tapped, parentheses when double
 tapped and braves when shifted.
 
-The `FR` layer is used to input french special characters.
+The `FR` layer is used to input french special characters. It makes use of
+`RALT` as compose so it will not work properly unless that is set up.
 
 ## How to compile
 

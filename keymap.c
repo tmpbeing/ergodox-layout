@@ -18,6 +18,28 @@ enum {
     CT_LBP,
     CT_RBP,
     CT_WM_TMUX,
+// French characters
+    CT_A_CIRCONFLEXE = SAFE_RANGE,
+    CT_A_GRAVE,
+    CT_A_TREMA,
+    CT_E_AIGU,
+    CT_E_CIRCONFLEXE,
+    CT_E_GRAVE,
+    CT_E_TREMA,
+    CT_I_CIRCONFLEXE,
+    CT_I_TREMA,
+    CT_O_CIRCONFLEXE,
+    CT_O_TREMA,
+    CT_U_CIRCONFLEXE,
+    CT_U_GRAVE,
+    CT_U_TREMA,
+};
+
+enum accent {
+    AIGU,
+    CIRCONFLEXE,
+    GRAVE,
+    TREMA,
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -60,7 +82,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                   KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN,         KC_QUOT,
   TD(CT_WM_TMUX), KC_N,    KC_M,    KC_COMM, KC_DOT,  RCTL_T(KC_SLSH), TT(FN),
                            KC_ESC,  KC_NO,   KC_NO,   KC_NO,           KC_NO,
-  TG(FR),         KC_DELT,
+  OSL(FR),         KC_DELT,
   KC_LEAD,
   TG(NUM),        KC_ENT,  KC_SPC
 ),
@@ -141,7 +163,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // right hand
   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-           KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_MPLY,
+           KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
                     KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
   KC_TRNS, KC_TRNS,
@@ -195,13 +217,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Keymap 4: Special french characters
  *
  * ,--------------------------------------------------.           ,--------------------------------------------------.
- * |        |      |      |      |      |      |      |           |      |      |      |      |      |      |        |
+ * |        |  ä   |  ë   |  ï   |  ö   |  ü   |      |           |      |      |      |      |      |      |        |
  * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
- * |        |      |      |      |      |      |      |           |      |      |      |      |      |      |        |
+ * |        |  à   |  ê   |  î   |  ô   |  û   |      |           |      |      |      |      |      |      |        |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
- * |        |      |      |      |      |      |------|           |------|      |      |      |      |      |        |
+ * |        |  à   |  à   |      |      |  ù   |------|           |------|      |      |      |      |      |        |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
- * |        |      |      |      |      |      |      |           |      |      |      |      |      |      |        |
+ * |        |      |  é   |      |      |      |      |           |      |      |      |      |      |      |        |
  * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
  *   |      |      |      |      |      |                                       |      |      |      |      |      |
  *   `----------------------------------'                                       `----------------------------------'
@@ -215,10 +237,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 [FR] = LAYOUT_ergodox(
   // left hand
-  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+  KC_TRNS, CT_A_TREMA, CT_E_TREMA, CT_I_TREMA, CT_O_TREMA, CT_U_TREMA, KC_TRNS,
+  KC_TRNS, CT_A_CIRCONFLEXE, CT_E_CIRCONFLEXE, CT_I_CIRCONFLEXE, CT_O_CIRCONFLEXE, CT_U_CIRCONFLEXE, KC_TRNS,
+  KC_TRNS, CT_A_GRAVE, CT_E_GRAVE, KC_TRNS, KC_TRNS, CT_U_GRAVE,
+  KC_TRNS, KC_TRNS, CT_E_AIGU, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
                                                KC_TRNS, KC_TRNS,
                                                         KC_TRNS,
@@ -354,6 +376,25 @@ uint32_t layer_state_set_user(uint32_t state) {
     return state;
 }
 
+void suspend_power_down_user(void) {
+    rgblight_disable();
+}
+
+void suspend_wakeup_init_user(void) {
+    rgblight_enable();
+}
+
+void do_accentuated_character(char *accent, char *character, keyrecord_t *record) {
+    if (record->event.pressed) {
+        SEND_STRING(SS_DOWN(X_RALT));
+        send_string(accent);
+        SEND_STRING(SS_UP(X_RALT));
+        send_string(character);
+        reset_oneshot_layer();
+        layer_off(FR);
+    }
+}
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case KC_TRNS:
@@ -362,17 +403,50 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 clear_oneshot_layer_state(ONESHOT_OTHER_KEY_PRESSED);
             }
             return true;
-            break;
+        case CT_A_CIRCONFLEXE:
+            do_accentuated_character("^", "a", record);
+            return false;
+        case CT_A_GRAVE:
+            do_accentuated_character("`", "a", record);
+            return false;
+        case CT_A_TREMA:
+            do_accentuated_character("\"", "a", record);
+            return false;
+        case CT_E_AIGU:
+            do_accentuated_character("'", "e", record);
+            return false;
+        case CT_E_CIRCONFLEXE:
+            do_accentuated_character("^", "e", record);
+            return false;
+        case CT_E_GRAVE:
+            do_accentuated_character("`", "e", record);
+            return false;
+        case CT_E_TREMA:
+            do_accentuated_character("\"", "e", record);
+            return false;
+        case CT_I_CIRCONFLEXE:
+            do_accentuated_character("^", "i", record);
+            return false;
+        case CT_I_TREMA:
+            do_accentuated_character("\"", "i", record);
+            return false;
+        case CT_O_CIRCONFLEXE:
+            do_accentuated_character("^", "o", record);
+            return false;
+        case CT_O_TREMA:
+            do_accentuated_character("\"", "o", record);
+            return false;
+        case CT_U_CIRCONFLEXE:
+            do_accentuated_character("^", "u", record);
+            return false;
+        case CT_U_GRAVE:
+            do_accentuated_character("`", "u", record);
+            return false;
+        case CT_U_TREMA:
+            do_accentuated_character("\"", "u", record);
+            return false;
         default:
             return true;
     }
     return true;
-}
-
-void suspend_power_down_user(void) {
-    rgblight_disable();
-}
-
-void suspend_wakeup_init_user(void) {
-    rgblight_enable();
 }
