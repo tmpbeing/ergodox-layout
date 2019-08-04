@@ -33,13 +33,7 @@ enum {
     CT_U_CIRCONFLEXE,
     CT_U_GRAVE,
     CT_U_TREMA,
-};
-
-enum accent {
-    AIGU,
-    CIRCONFLEXE,
-    GRAVE,
-    TREMA,
+    CT_C_CEDILLE,
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -50,7 +44,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * |   =    |   1  |   2  |   3  |   4  |   5  | ESC  |           | Fn   |   6  |   7  |   8  |   9  |   0  |   -    |
      * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
      * |   `    |   Q  |   W  |   E  |   R  |   T  | { (  |           | ) }  |   Y  |   U  |   I  |   O  |   P  |   \    |
-     * |--------+------+------+------+------+------|   [  |           | ]    |------+------+------+------+------+--------|
+     * |--------+------+------+------+------+------| < [  |           | ] >  |------+------+------+------+------+--------|
      * | Tab    |   A  |   S  |   D  |   F  |   G  |------|           |------|   H  |   J  |   K  |   L  |  ;   |'       |
      * |--------+------+------+------+------+------|Tmux  |           | Tmux |------+------+------+------+------+--------|
      * | LShift |Z\Ctrl|   X  |   C  |   V  |   B  | WM   |           |  WM  |   N  |   M  |   ,  |   .  |/\Ctrl| Fn     |
@@ -217,13 +211,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Keymap 4: Special french characters
  *
  * ,--------------------------------------------------.           ,--------------------------------------------------.
- * |        |  ä   |  ë   |  ï   |  ö   |  ü   |      |           |      |      |      |      |      |      |        |
+ * |        |  ä   |  ë   |  ï   |  ö   |  ü   |      |           |      |  ç   |      |      |      |      |        |
  * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
- * |        |  à   |  ê   |  î   |  ô   |  û   |      |           |      |      |      |      |      |      |        |
+ * |        |  à   |  ê   |  î   |  ô   |  û   |      |           |      |  ç   |      |      |      |      |        |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
- * |        |  à   |  à   |      |      |  ù   |------|           |------|      |      |      |      |      |        |
+ * |        |  à   |  à   |      |      |  ù   |------|           |------|  ç   |      |      |      |      |        |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
- * |        |      |  é   |      |      |      |      |           |      |      |      |      |      |      |        |
+ * |        |      |  é   |      |      |      |      |           |      |  ç   |      |      |      |      |        |
  * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
  *   |      |      |      |      |      |                                       |      |      |      |      |      |
  *   `----------------------------------'                                       `----------------------------------'
@@ -246,10 +240,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                                         KC_TRNS,
                                       KC_TRNS, KC_TRNS, KC_TRNS,
   // right hand
-  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-           KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+  KC_TRNS, CT_C_CEDILLE, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+  KC_TRNS, CT_C_CEDILLE, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+           CT_C_CEDILLE, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+  KC_TRNS, CT_C_CEDILLE, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
                     KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
   KC_TRNS, KC_TRNS,
   KC_TRNS,
@@ -312,6 +306,11 @@ void _td_brackets_finished(qk_tap_dance_state_t *state, void *user_data) {
             register_code16(KC_LPRN);
         else
             register_code16(KC_RPRN);
+    } else if (state->count == 3) {
+        if (state->keycode == TD(CT_LBP))
+            register_code16(KC_LABK);
+        else
+            register_code16(KC_RABK);
     }
 }
 
@@ -326,6 +325,11 @@ void _td_brackets_reset(qk_tap_dance_state_t *state, void *user_data) {
             unregister_code16(KC_LPRN);
         else
             unregister_code16(KC_RPRN);
+    } else if (state->count == 3) {
+        if (state->keycode == TD(CT_LBP))
+            unregister_code16(KC_LABK);
+        else
+            unregister_code16(KC_RABK);
     }
 }
 
@@ -458,6 +462,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
         case CT_U_TREMA:
             do_accentuated_character("\"", "u", record);
+            return false;
+        case CT_C_CEDILLE:
+            do_accentuated_character(",", "c", record);
             return false;
         default:
             return true;
