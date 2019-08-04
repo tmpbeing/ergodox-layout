@@ -1,3 +1,5 @@
+*.hex
+
 # The clang format file is supplied by QMK
 .clang-format
 

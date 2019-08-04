@@ -33,6 +33,9 @@ $ ln -s /path/to/this/repo keyboards/ergodox_ex/keymaps/tmpbeing
 $ make ergodox_ez:tmpbeing
 ```
 
+Alternatively you can use my makefile. If you do so make sure the `QMK_LOCATION`
+variable in the makefile is the path to your QMK folder.
+
 ## Flashing
 
 To flash use [teensy_loader_cli](https://www.pjrc.com/teensy/loader_cli.html) or [wally](https://ergodox-ez.com/pages/wally).
