@@ -34,6 +34,8 @@ enum {
     CT_U_GRAVE,
     CT_U_TREMA,
     CT_C_CEDILLE,
+// Other
+    CT_REVERSE_BACKTICK_TILDE,
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -63,7 +65,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [BASE] = LAYOUT_ergodox(
   // left hand
   KC_EQL,          KC_1,        KC_2,          KC_3,    KC_4,    KC_5,    KC_ESC,
-  KC_GRAVE,         KC_Q,        KC_W,          KC_E,    KC_R,    KC_T,    TD(CT_LBP),
+  CT_REVERSE_BACKTICK_TILDE,         KC_Q,        KC_W,          KC_E,    KC_R,    KC_T,    TD(CT_LBP),
   KC_TAB,         KC_A,        KC_S,          KC_D,    KC_F,    KC_G,
   KC_LSFT,        LCTL_T(KC_Z), KC_X,          KC_C,    KC_V,    KC_B,    TD(CT_WM_TMUX),
   KC_NO, KC_NO, KC_NO, KC_NO, KC_ESC,
@@ -388,13 +390,19 @@ void suspend_wakeup_init_user(void) {
     rgblight_enable();
 }
 
-void do_accentuated_character(char *accent, char *character, keyrecord_t *record) {
-    bool is_shifted = false;
+bool is_shift_active(void) {
     uint8_t temp_mod = get_mods();
     uint8_t temp_osm = get_oneshot_mods();
-    clear_mods(); clear_oneshot_mods();
     if ( (temp_mod | temp_osm) & MOD_MASK_SHIFT ) {
-        is_shifted = true;
+        return true;
+    }
+    return false;
+}
+
+void do_accentuated_character(char *accent, char *character, keyrecord_t *record) {
+    bool is_shifted = is_shift_active();
+    if (is_shifted) {
+        clear_mods(); clear_oneshot_mods();
     }
     if (record->event.pressed) {
         clear_mods();
@@ -465,6 +473,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
         case CT_C_CEDILLE:
             do_accentuated_character(",", "c", record);
+            return false;
+        case CT_REVERSE_BACKTICK_TILDE:
+            if (record->event.pressed) {
+                if (is_shift_active()) {
+                    SEND_STRING(SS_UP(X_LSHIFT)"`"SS_DOWN(X_LSHIFT));
+                } else {
+                    SEND_STRING("~");
+                }
+            }
             return false;
         default:
             return true;
