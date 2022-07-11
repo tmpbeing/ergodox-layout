@@ -11,10 +11,12 @@ enum {
     FN,
     FR,
     NUM,
+    DOTA,
 };
 
 // Custom keycodes
 enum {
+// TapDance
     CT_LBP,
     CT_RBP,
     CT_WM_TMUX,
@@ -51,7 +53,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * |--------+------+------+------+------+------|Tmux  |           | Tmux |------+------+------+------+------+--------|
      * | LShift |Z\Ctrl|   X  |   C  |   V  |   B  | WM   |           |  WM  |   N  |   M  |   ,  |   .  |/\Ctrl| Fn     |
      * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
-     *   |      |      |      |      | Esc  |                                       | Esc  |      |      |      |      |
+     *   |      |      |      |      | Esc  |                                       | Esc  |      |      |      | Dota |
      *   `----------------------------------'                                       `----------------------------------'
      *                                        ,-------------.       ,-------------.
      *                                        | LAlt | LGui |       | FR   | Del  |
@@ -77,7 +79,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   TD(CT_RBP),     KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,            KC_BSLS,
                   KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN,         KC_QUOT,
   TD(CT_WM_TMUX), KC_N,    KC_M,    KC_COMM, KC_DOT,  RCTL_T(KC_SLSH), TT(FN),
-                           KC_ESC,  KC_NO,   KC_NO,   KC_NO,           KC_NO,
+                           KC_ESC,  KC_NO,   KC_NO,   KC_NO,           TG(DOTA),
   OSL(FR),         KC_DELT,
   KC_LEAD,
   TG(NUM),        KC_ENT,  KC_SPC
@@ -294,6 +296,27 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_TRNS,
   KC_TRNS, KC_TRNS, KC_TRNS
 ),
+
+[DOTA] = LAYOUT_ergodox(
+  // left hand
+  KC_TAB, KC_1, KC_2, KC_3, KC_4, KC_5, KC_TRNS,
+  KC_F2, KC_Z, KC_X, KC_C, KC_V, KC_TRNS, KC_TRNS,
+  KC_F1, KC_Q, KC_W, KC_E, KC_R, KC_TRNS,
+  KC_LCTRL, KC_A, KC_S, KC_D, KC_F, KC_G, KC_LALT,
+  KC_SCLN, KC_TRNS, KC_F3, KC_F4, KC_PGUP,
+                                               KC_KP_ASTERISK, KC_K,
+                                                        KC_Y,
+                                      KC_SPC, KC_SLSH, KC_U,
+  // right hand
+  KC_F9, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+  KC_F9, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+           KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+  KC_F9, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+                    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+  KC_TRNS, KC_TRNS,
+  KC_TRNS,
+  KC_TRNS, KC_TRNS, KC_TRNS
+),
 };
 
 
@@ -374,6 +397,9 @@ uint32_t layer_state_set_user(uint32_t state) {
             break;
         case NUM:
             rgblight_setrgb(RGBLIGHT_COLOR_LAYER_5);
+            break;
+        case DOTA:
+            rgblight_setrgb(RGBLIGHT_COLOR_LAYER_6);
             break;
         default:
             rgblight_setrgb(RGBLIGHT_COLOR_LAYER_0);

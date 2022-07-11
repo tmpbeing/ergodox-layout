@@ -8,12 +8,13 @@ SRC_DESTINATION = $(QMK_LOCATION)/keyboards/ergodox_ez/keymaps/$(LAYOUT_NAME)
 all: $(TARGET)
 
 $(TARGET):
+	mkdir -p $(SRC_DESTINATION)
 	cp $(SRC) $(SRC_DESTINATION)
 	make -C $(QMK_LOCATION) ergodox_ez:$(LAYOUT_NAME)
 	cp $(QMK_LOCATION)/$(TARGET) .
 
 clean:
-	rm $(TARGET)
+	rm -f $(TARGET)
 
 clean-qmk:
 	rm -rf $(SRC_DESTINATION)
