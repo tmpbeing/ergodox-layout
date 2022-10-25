@@ -1,5 +1,5 @@
 LAYOUT_NAME = tmpbeing
-TARGET = ergodox_ez_$(LAYOUT_NAME).hex
+TARGET = ergodox_ez_base_$(LAYOUT_NAME).hex
 QMK_LOCATION = ../qmk_firmware
 
 SRC = rules.mk keymap.c config.h
@@ -18,10 +18,10 @@ clean:
 
 clean-qmk:
 	rm -rf $(SRC_DESTINATION)
-	rm $(QMK_LOCATION)/$(TARGET)
+	rm -f $(QMK_LOCATION)/$(TARGET)
 
 fclean: clean clean-qmk
 
-re: clean all
+re: clean clean-qmk all
 
 .PHONY: all clean clean-qmk fclean re

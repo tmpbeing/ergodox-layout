@@ -6,12 +6,12 @@
 // Layers
 enum {
     BASE = 0,
+    GAMES,
     WM,
     TMUX,
     FN,
     FR,
     NUM,
-    DOTA,
 };
 
 // Custom keycodes
@@ -53,7 +53,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * |--------+------+------+------+------+------|Tmux  |           | Tmux |------+------+------+------+------+--------|
      * | LShift |Z\Ctrl|   X  |   C  |   V  |   B  | WM   |           |  WM  |   N  |   M  |   ,  |   .  |/\Ctrl| Fn     |
      * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
-     *   |      |      |      |      | Esc  |                                       | Esc  |      |      |      | Dota |
+     *   |      |      |      |      | Esc  |                                       | Esc  |      |      |      | Game |
      *   `----------------------------------'                                       `----------------------------------'
      *                                        ,-------------.       ,-------------.
      *                                        | LAlt | LGui |       | FR   | Del  |
@@ -79,13 +79,35 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   TD(CT_RBP),     KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,            KC_BSLS,
                   KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN,         KC_QUOT,
   TD(CT_WM_TMUX), KC_N,    KC_M,    KC_COMM, KC_DOT,  RCTL_T(KC_SLSH), TT(FN),
-                           KC_ESC,  KC_NO,   KC_NO,   KC_NO,           TG(DOTA),
+                           KC_ESC,  KC_NO,   KC_NO,   KC_NO,           TG(GAMES),
   OSL(FR),         KC_DELT,
   KC_LEAD,
   TG(NUM),        KC_ENT,  KC_SPC
 ),
 
-/* Keymap 1: WM controls
+
+[GAMES] = LAYOUT_ergodox(
+  // left hand
+  KC_ESC, KC_1, KC_2, KC_3, KC_4, KC_5, KC_TRNS,
+  KC_TAB, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+  KC_LCTL, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+  KC_LSFT, KC_Z, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_LALT,
+  KC_F1, KC_F2, KC_F3, KC_F4, KC_LALT,
+                                               KC_KP_ASTERISK, KC_K,
+                                                        KC_Y,
+                                      KC_BSPC, KC_SLSH, KC_U,
+  // right hand
+  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+           KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+                    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+  KC_TRNS, KC_TRNS,
+  KC_TRNS,
+  KC_TRNS, KC_TRNS, KC_TRNS
+),
+
+/* Keymap 2: WM controls
  *
  * ,--------------------------------------------------.           ,--------------------------------------------------.
  * |        |      |      |      |      |      |      |           |      |      |      |      |      |      |        |
@@ -127,7 +149,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_TRNS, KC_TRNS, KC_TRNS
 ),
 
-/* Keymap 2: Tmux controls
+/* Keymap 3: Tmux controls
  *
  * ,--------------------------------------------------.           ,--------------------------------------------------.
  * |        |      |      |      |      |      |      |           |      |      |      |      |      |      |        |
@@ -170,10 +192,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ),
 
 
-/* Keymap 3: FN : Media, mouse, arrows and function keys
+/* Keymap 4: FN : Media, mouse, arrows and function keys
  *
  * ,--------------------------------------------------.           ,--------------------------------------------------.
- * |        |  F1  |  F2  |  F3  |  F4  |  F5  |      |           |      |  F6  |  F7  |  F8  |  F9  |  F10 |        |
+ * |        |  F1  |  F2  |  F3  |  F4  |  F5  |      |           |      |  F6  |  F7  |  F8  |  F9  |  F10 | EE_CLR |
  * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
  * |        |      |      | MUP  |      |      |      |           |      | HOME | PGUP | PGDW | END  |      |        |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
@@ -202,7 +224,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                                               KC_MEDIA_PREV_TRACK,
                                                KC_MEDIA_STOP, KC_MEDIA_PLAY_PAUSE, KC_MEDIA_NEXT_TRACK,
   // right hand
-  KC_TRNS, KC_F6,   KC_F7,     KC_F8,   KC_F9,    KC_F10,  KC_TRNS,
+  KC_TRNS, KC_F6,   KC_F7,     KC_F8,   KC_F9,    KC_F10,  EE_CLR,
   KC_TRNS, KC_HOME, KC_PGDOWN, KC_PGUP, KC_END,   KC_TRNS, KC_TRNS,
            KC_LEFT, KC_DOWN,   KC_UP,   KC_RIGHT, KC_TRNS, KC_TRNS,
   KC_TRNS, KC_TRNS, KC_TRNS,   KC_TRNS, KC_TRNS,  KC_TRNS, KC_TRNS,
@@ -212,7 +234,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_AUDIO_VOL_DOWN, KC_TRNS, KC_TRNS
 ),
 
-/* Keymap 4: Special french characters
+/* Keymap 5: Special french characters
  *
  * ,--------------------------------------------------.           ,--------------------------------------------------.
  * |        |  ä   |  ë   |  ï   |  ö   |  ü   |      |           |      |  ç   |      |      |      |      |        |
@@ -255,7 +277,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ),
 
 // TODO: Auto numlock when switching to this layer
-/* Keymap 5: Numpad
+/* Keymap 6: Numpad
  *
  * ,--------------------------------------------------.           ,--------------------------------------------------.
  * |        |      |      |      |      |      |      |           |      |      | KPLOC| KP/  | KP*  | KP-  |        |
@@ -295,44 +317,23 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_TRNS, KC_TRNS,
   KC_TRNS,
   KC_TRNS, KC_TRNS, KC_TRNS
-),
-
-[DOTA] = LAYOUT_ergodox(
-  // left hand
-  KC_TAB, KC_1, KC_2, KC_3, KC_4, KC_5, KC_TRNS,
-  KC_F2, KC_Z, KC_X, KC_C, KC_V, KC_TRNS, KC_TRNS,
-  KC_F1, KC_Q, KC_W, KC_E, KC_R, KC_TRNS,
-  KC_LCTRL, KC_A, KC_S, KC_D, KC_F, KC_G, KC_LALT,
-  KC_SCLN, KC_TRNS, KC_F3, KC_F4, KC_PGUP,
-                                               KC_KP_ASTERISK, KC_K,
-                                                        KC_Y,
-                                      KC_SPC, KC_SLSH, KC_U,
-  // right hand
-  KC_F9, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-  KC_F9, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-           KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-  KC_F9, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-                    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-  KC_TRNS, KC_TRNS,
-  KC_TRNS,
-  KC_TRNS, KC_TRNS, KC_TRNS
-),
+)
 };
 
 
 void _td_brackets_finished(qk_tap_dance_state_t *state, void *user_data) {
     if (state->count == 1) {
-        if (state->keycode == TD(CT_LBP))
+        if (TAP_DANCE_KEYCODE(state) == TD(CT_LBP))
             register_code16(KC_LBRC);
         else
             register_code16(KC_RBRC);
     } else if (state->count == 2) {
-        if (state->keycode == TD(CT_LBP))
+        if (TAP_DANCE_KEYCODE(state) == TD(CT_LBP))
             register_code16(KC_LPRN);
         else
             register_code16(KC_RPRN);
     } else if (state->count == 3) {
-        if (state->keycode == TD(CT_LBP))
+        if (TAP_DANCE_KEYCODE(state) == TD(CT_LBP))
             register_code16(KC_LABK);
         else
             register_code16(KC_RABK);
@@ -341,17 +342,17 @@ void _td_brackets_finished(qk_tap_dance_state_t *state, void *user_data) {
 
 void _td_brackets_reset(qk_tap_dance_state_t *state, void *user_data) {
     if (state->count == 1) {
-        if (state->keycode == TD(CT_LBP))
+        if (TAP_DANCE_KEYCODE(state) == TD(CT_LBP))
             unregister_code16(KC_LBRC);
         else
             unregister_code16(KC_RBRC);
     } else if (state->count == 2) {
-        if (state->keycode == TD(CT_LBP))
+        if (TAP_DANCE_KEYCODE(state) == TD(CT_LBP))
             unregister_code16(KC_LPRN);
         else
             unregister_code16(KC_RPRN);
     } else if (state->count == 3) {
-        if (state->keycode == TD(CT_LBP))
+        if (TAP_DANCE_KEYCODE(state) == TD(CT_LBP))
             unregister_code16(KC_LABK);
         else
             unregister_code16(KC_RABK);
@@ -378,8 +379,8 @@ qk_tap_dance_action_t tap_dance_actions[] = {
     [CT_WM_TMUX] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, _td_window_controls_finished, _td_window_controls_reset)
 };
 
-uint32_t layer_state_set_user(uint32_t state) {
-    switch (biton32(state)) {
+layer_state_t layer_state_set_user(layer_state_t state) {
+    switch (get_highest_layer(state)) {
         case BASE:
             rgblight_setrgb(RGBLIGHT_COLOR_LAYER_0);
             break;
@@ -398,7 +399,7 @@ uint32_t layer_state_set_user(uint32_t state) {
         case NUM:
             rgblight_setrgb(RGBLIGHT_COLOR_LAYER_5);
             break;
-        case DOTA:
+        case GAMES:
             rgblight_setrgb(RGBLIGHT_COLOR_LAYER_6);
             break;
         default:
